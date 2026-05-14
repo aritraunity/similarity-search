@@ -1,4 +1,4 @@
-from logger import logger
+from similaritysearch.logger import logger
 
 # L2 Distance
 def euclidean_distance (vector1, vector2, verbose = False):
@@ -15,4 +15,3 @@ def euclidean_distance (vector1, vector2, verbose = False):
         logger.value("L2 Distance", str(l2), kwargs=args)
     return l2
 
-euclidean_distance([1,2,3], [3,4,5], verbose=True)
