@@ -3,7 +3,7 @@ import numpy as np
 import scipy
 import torch
 from sentence_transformers import SentenceTransformer
-from similaritysearch.math import euclidean_distance
+from similaritysearch.math import euclidean_distance, scipy_euclidean_distance
 import matplotlib.pyplot as plt
 
 documents = [
@@ -51,4 +51,7 @@ for i in range(x_dim):
 
 print("Improved Calculations on L2 Distance")
 print(l2_distances_improved)
-
+print("L2 / Euclidean Distance using Sci Py: Analytical comparision")
+l2_distance_scipy = scipy_euclidean_distance(embeddings=embeddings)
+print(l2_distance_scipy)
+print(np.allclose(l2_distance_scipy, l2_distances))
