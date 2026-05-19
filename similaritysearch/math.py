@@ -1,6 +1,8 @@
 import math
 from similaritysearch.logger import logger
 from scipy.spatial import distance
+import torch
+import numpy as np
 
 # L2 Distance
 def euclidean_distance (vector1, vector2, verbose = False):
@@ -40,13 +42,14 @@ def dot_product (vector1, vector2, verbose = False):
     dot = sum(x*y for x, y in zip(vector1, vector2))
     return dot
 
+# Normalize vector manually
 def normalized (vector1)->list[float]:
     """
     Normalize a vector
     """
     normalized_vector = []
     # List Comprehension: Expression Loop Condition -> List
-    magnitude = math.sqrt(sum(x ** 2 for x in vector1))
+    magnitude = math.sqrt(sum(x * x for x in vector1))
     normalized_vector = list(float(x) / magnitude for x in vector1)
     return normalized_vector
 
@@ -62,3 +65,28 @@ def cosine_similarity (vector1, vector2):
     #Cosine Similarity
     return dot_product(normA, normB)
 
+# Matrix Dot Product
+def matrix_dot_product (embeddings):
+    dot_product = embeddings @ embeddings.T
+    return dot_product
+
+# Normalize Embeddings through Pytorch
+def normalize_embeddings (embeddings):
+    normalized = np.zeros([0,0])
+    normalized = torch.nn.functional.normalize(
+        torch.from_numpy(embeddings)
+    ).numpy()
+    return normalized
+
+# Cosine Similarity using Matrix
+def matrix_cosine_similarity(embeddings):
+    normalized_embeddings = normalize_embeddings(embeddings)
+    cs = matrix_dot_product(embeddings=normalized_embeddings)
+    return cs
+
+# Co-Sine Similarities for De-coupled Embeddings
+def matrix_cosine_similarity_multi (embeddings1, embeddings2):
+    ne1 = normalize_embeddings(embeddings=embeddings1)
+    ne2 = normalize_embeddings(embeddings=embeddings2)
+    cs = ne1 @ ne2.T
+    return cs

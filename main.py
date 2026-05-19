@@ -3,7 +3,11 @@ import numpy as np
 import scipy
 import torch
 from sentence_transformers import SentenceTransformer
-from similaritysearch.math import euclidean_distance, scipy_euclidean_distance
+from similaritysearch.math import (euclidean_distance, 
+                                   scipy_euclidean_distance, 
+                                   cosine_similarity, 
+                                   matrix_cosine_similarity,
+                                   matrix_cosine_similarity_multi)
 import matplotlib.pyplot as plt
 
 documents = [
@@ -55,3 +59,23 @@ print("L2 / Euclidean Distance using Sci Py: Analytical comparision")
 l2_distance_scipy = scipy_euclidean_distance(embeddings=embeddings)
 print(l2_distance_scipy)
 print(np.allclose(l2_distance_scipy, l2_distances))
+
+# Statement semantic similarity with a document
+print("Check Cosine Similarity")
+source = ["Who is responsible for a coding project and fixing others' mistakes?"]
+source_embedding = model.encode(source)
+print(f"Source Shape: {source_embedding.shape} \n Embeddings Shape: {embeddings.shape}")
+cosine_similarities = []
+for i in range(x_dim):
+    x = cosine_similarity(source_embedding[0], embeddings[i])
+    cosine_similarities.append(x)
+
+max_cossm = max(cosine_similarities)
+max_cossm_id = cosine_similarities.index(max_cossm)
+print (f"Q: {source[0]}\nA:{documents[max_cossm_id]}")
+print("Calculation of Co-Sine Similarities using PyTorch for Normalization and Matrix Dot Product")
+cs = matrix_cosine_similarity(embeddings=embeddings)
+print(cs)
+print("Co-Sine Similarities for Source vs. Document embeddings")
+cs_1 = matrix_cosine_similarity_multi(embeddings1=embeddings, embeddings2=source_embedding)
+print(cs_1)
