@@ -26,7 +26,7 @@ class Logger (AbstractLogger):
         return cls._instance
 
 
-    def debug(self, msg: str):
+    def debug(self, msg: object):
         print(f"[DEBUG] {msg}")
     def error(self, msg: str):
         print(f"[ERROR] {msg}")
