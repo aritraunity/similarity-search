@@ -79,3 +79,52 @@ print(cs)
 print("Co-Sine Similarities for Source vs. Document embeddings")
 cs_1 = matrix_cosine_similarity_multi(embeddings1=embeddings, embeddings2=source_embedding)
 print(cs_1)
+
+# Data Visualization
+doc_labels = [f"Doc {i + 1}" for i in range(len(documents))]
+
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+fig.suptitle("Similarity Search — Visual Analysis")
+
+# L2 Distance Matrix heatmap
+im0 = axes[0, 0].imshow(l2_distances, cmap='YlOrRd')
+axes[0, 0].set_title("L2 Distance Matrix")
+axes[0, 0].set_xticks(range(len(doc_labels)))
+axes[0, 0].set_yticks(range(len(doc_labels)))
+axes[0, 0].set_xticklabels(doc_labels, rotation=45, ha='right')
+axes[0, 0].set_yticklabels(doc_labels)
+fig.colorbar(im0, ax=axes[0, 0])
+for i in range(len(doc_labels)):
+    for j in range(len(doc_labels)):
+        axes[0, 0].text(j, i, f"{l2_distances[i, j]:.2f}", ha='center', va='center', fontsize=8)
+
+# Matrix Cosine Similarity heatmap (documents vs documents)
+im1 = axes[0, 1].imshow(cs, cmap='coolwarm', vmin=-1, vmax=1)
+axes[0, 1].set_title("Matrix Cosine Similarity (Documents)")
+axes[0, 1].set_xticks(range(len(doc_labels)))
+axes[0, 1].set_yticks(range(len(doc_labels)))
+axes[0, 1].set_xticklabels(doc_labels, rotation=45, ha='right')
+axes[0, 1].set_yticklabels(doc_labels)
+fig.colorbar(im1, ax=axes[0, 1])
+for i in range(len(doc_labels)):
+    for j in range(len(doc_labels)):
+        axes[0, 1].text(j, i, f"{cs[i, j]:.2f}", ha='center', va='center', fontsize=8)
+
+# Cosine Similarity — query vs documents (manual loop)
+axes[1, 0].bar(doc_labels, cosine_similarities, color='steelblue')
+axes[1, 0].set_title("Query vs. Document Cosine Similarity (Manual)")
+axes[1, 0].set_xticks(range(len(doc_labels)))
+axes[1, 0].set_xticklabels(doc_labels, rotation=45, ha='right')
+axes[1, 0].set_ylabel("Cosine Similarity")
+axes[1, 0].set_ylim(0, max(cosine_similarities) * 1.2)
+
+# Cosine Similarity — query vs documents (matrix)
+axes[1, 1].bar(doc_labels, cs_1.flatten(), color='coral')
+axes[1, 1].set_title("Query vs. Document Cosine Similarity (Matrix)")
+axes[1, 1].set_xticks(range(len(doc_labels)))
+axes[1, 1].set_xticklabels(doc_labels, rotation=45, ha='right')
+axes[1, 1].set_ylabel("Cosine Similarity")
+axes[1, 1].set_ylim(0, max(cs_1.flatten()) * 1.2)
+
+plt.tight_layout()
+plt.show()
